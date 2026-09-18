@@ -1,0 +1,1046 @@
+<title>Work Order Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* exact Figma "Spark Design System 2.0" tokens (power filters01, node 4088:15137) */
+    --bg-base:#141414;
+    --bg-elevation-1:#1c1c1c;
+    --bg-elevation-2:#212121;
+    --bg-brand:#6240bb;
+    --bg-brand-secondary:#392c5d;
+    --bg-on-color:#fafafa;
+    --border-primary:#212121;
+    --border-secondary:#404040;
+    --border-brand-default:#7962d5;
+    --text-heading:#fafafa;
+    --text-body:#a3a3a3;
+    --text-placeholder:#737373;
+    --text-brand-secondary:#e3d4ff;
+    --text-on-color:#fafafa;
+    --icon-primary:#e5e5e5;
+    --dark-theme-bg:#1a1c1c;
+    --green-950:#052e16;
+    --green-600:#16a34a;
+    --badge-error-bg:#561716;
+    --badge-error-border:#ef4444;
+    --yellow-950:#422006;
+    --yellow-500:#eab308;
+    --blue-950:#172554;
+    --blue-500:#3b82f6;
+    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --font-heading:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --font-geist:"Geist","Inter",-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg-base);
+    color:var(--text-heading);
+    margin:0;
+    min-height:100%;
+    font-family:var(--font-body);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{display:flex;min-height:100vh;width:100%;}
+
+  /* ---------- Top Header (node 4088:15139) ---------- */
+  .topheader{
+    display:flex;align-items:center;justify-content:space-between;
+    height:47px;flex:0 0 47px;width:100%;
+    background:var(--bg-elevation-1);
+    border-bottom:1px solid var(--border-secondary);
+    padding:6px 24px;
+    position:fixed;top:0;left:0;z-index:10;
+  }
+  .th-left,.th-right{display:flex;align-items:center;gap:24px;}
+  .th-right{gap:16px;}
+  .th-divider{width:1px;height:32px;background:var(--border-secondary);flex:0 0 auto;}
+  .logo{display:flex;align-items:center;gap:8px;}
+  .logo svg{display:block;height:26px;width:auto;}
+  .icon-btn28{
+    width:28px;height:28px;border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--icon-primary);cursor:pointer;flex:0 0 auto;
+  }
+  .icon-btn28:hover{background:var(--bg-elevation-2);}
+  .icon-btn28 svg{width:17.5px;height:17.5px;}
+  .global-search{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--bg-elevation-2);
+    border-radius:4px;
+    height:32px;width:480px;
+    padding:8px 16px;
+  }
+  .global-search .left{display:flex;align-items:center;gap:10px;}
+  .global-search svg{width:20px;height:20px;color:var(--text-placeholder);flex:0 0 auto;}
+  .global-search input{
+    border:none;background:transparent;outline:none;
+    color:var(--text-placeholder);font:500 12px var(--font-body);width:180px;
+  }
+  .global-search input::placeholder{color:var(--text-placeholder);}
+  .kbd-combo{display:flex;align-items:center;gap:4px;flex:0 0 auto;}
+  .kbd{
+    background:var(--dark-theme-bg);border-radius:4px;
+    padding:2px 4px;color:#fff;font:400 12px "Geist","Inter",sans-serif;line-height:16px;
+  }
+  .kbd-plus{color:#fff;font:400 12px "Geist","Inter",sans-serif;}
+  .user-chip{display:flex;align-items:center;gap:4px;cursor:pointer;}
+  .user-chip span{font:500 12px var(--font-body);color:#fff;white-space:nowrap;}
+  .user-chip svg{width:16px;height:16px;color:var(--icon-primary);}
+
+  /* ---------- Sidebar (node 4088:15141) ---------- */
+  .sidebar{
+    width:56px;flex:0 0 56px;
+    background:var(--bg-elevation-1);
+    border-right:1px solid var(--border-secondary);
+    display:flex;flex-direction:column;align-items:center;
+    padding:8px 8px 64px;gap:20px;
+    position:fixed;top:47px;left:0;bottom:0;
+  }
+  .sb-item{
+    width:24px;height:24px;padding:8px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    box-sizing:content-box;color:var(--icon-primary);cursor:pointer;
+  }
+  .sb-item:hover{background:var(--bg-elevation-2);}
+  .sb-item svg{width:24px;height:24px;}
+  .sb-items{display:flex;flex-direction:column;gap:12px;}
+  .sb-item.active{
+    width:20px;height:20px;
+    background:var(--bg-brand-secondary);
+    border:1px solid var(--border-brand-default);
+    color:#b9a4ff;
+  }
+  .sb-item.active svg{width:20px;height:20px;}
+  .sb-item:not(.active) svg{width:20px;height:20px;}
+
+  /* ---------- Main column ---------- */
+  .main{flex:1 1 auto;min-width:0;margin-left:56px;margin-top:47px;display:flex;flex-direction:column;}
+
+  /* ---------- 2nd header (node 4088:15144) ---------- */
+  .header2{
+    height:44px;border-bottom:1px solid var(--border-primary);
+    display:flex;align-items:center;padding:0 24px;
+  }
+  .header2-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+  .breadcrumb{display:flex;align-items:center;gap:4px;}
+  .breadcrumb .crumb{font:400 14px var(--font-body);color:var(--text-body);white-space:nowrap;}
+  .breadcrumb .crumb.current{color:var(--text-heading);}
+  .breadcrumb .sep{width:14px;height:14px;color:var(--text-body);opacity:.6;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .site-search{
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg-elevation-1);
+    border-radius:4px;height:28px;width:288px;
+    padding:8px 16px;
+  }
+  .site-search svg{width:16px;height:16px;color:var(--icon-primary);flex:0 0 auto;}
+  .site-search input{
+    border:none;background:transparent;outline:none;flex:1 1 auto;min-width:0;
+    color:#aba7a7;font:500 12px var(--font-body);
+  }
+  .site-search input::placeholder{color:#aba7a7;}
+
+  /* ---------- Tabs (node 4088:15152) ---------- */
+  .tabbar{border-bottom:1px solid var(--border-primary);padding:16px 16px 0;display:flex;align-items:flex-end;}
+  .tabs{display:flex;gap:8px;align-items:flex-start;}
+  .tab{
+    padding:2px 8px 12px;font:400 16px var(--font-body);color:var(--text-heading);
+    cursor:pointer;white-space:nowrap;
+  }
+  .tab.active{
+    font-weight:500;border-bottom:2px solid var(--bg-brand);
+    padding:2px 12px 12px;
+  }
+
+  /* ---------- Content ---------- */
+  .content{padding:0 20px;display:flex;flex-direction:column;}
+  .page-header{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    padding:32px 0 0;flex-wrap:wrap;
+  }
+  .page-header h1{
+    margin:0;font:600 24px var(--font-heading);color:var(--text-heading);
+  }
+  .page-header p{margin:8px 0 0;font:400 13px var(--font-body);color:var(--text-body);max-width:640px;}
+  .header-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .btn-bulk{
+    background:none;border:none;cursor:pointer;
+    height:40px;padding:10px 20px;border-radius:8px;
+    font:500 14px var(--font-body);color:var(--text-brand-secondary);
+  }
+  .btn-bulk:hover{background:var(--bg-elevation-1);}
+  .btn-primary{
+    background:var(--bg-brand);border:none;cursor:pointer;
+    height:36px;padding:10px 16px;border-radius:8px;
+    font:500 14px var(--font-body);color:var(--text-on-color);
+  }
+  .btn-primary:hover{background:#6f4bd1;}
+
+  .toolbar-row{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:32px 8px 0;
+  }
+  .toolbar-left h2{margin:0;font:600 18px var(--font-heading);color:var(--text-heading);}
+  .toolbar-left p{margin:4px 0 0;font:500 12px var(--font-body);color:var(--text-body);}
+  .toolbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .btn-apply{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--border-brand-default);background:none;cursor:pointer;
+    height:36px;padding:8px;border-radius:8px;
+    font:500 14px var(--font-body);color:var(--text-brand-secondary);white-space:nowrap;
+  }
+  .btn-apply svg{width:16px;height:16px;flex:0 0 auto;}
+  .search-field{
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg-elevation-1);border:1px solid var(--border-secondary);
+    border-radius:8px;min-height:36px;width:320px;padding:7.5px 12px;
+  }
+  .search-field svg{width:16px;height:16px;color:var(--icon-primary);flex:0 0 auto;}
+  .search-field input{
+    border:none;background:transparent;outline:none;flex:1 1 auto;min-width:0;
+    color:var(--text-placeholder);font:400 14px var(--font-body);
+  }
+  .search-field input::placeholder{color:var(--text-placeholder);}
+  .filter-group{display:flex;align-items:center;gap:16px;}
+  .btn-days{
+    display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;
+    height:40px;padding:10px 12px;border-radius:8px;
+    font:500 14px var(--font-body);color:var(--text-brand-secondary);white-space:nowrap;
+  }
+  .btn-days svg{width:16px;height:16px;flex:0 0 auto;}
+  .vsep{width:1px;height:36px;background:var(--border-secondary);}
+  .btn-gear{
+    display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;
+    height:32px;width:32px;padding:6px 8px;border-radius:8px;color:var(--icon-primary);
+  }
+  .btn-gear:hover{background:var(--bg-elevation-1);}
+  .btn-gear svg{width:20px;height:20px;}
+
+  .pinned-filters{display:none;flex-wrap:wrap;align-items:flex-end;gap:20px;padding:12px 8px 0;}
+  .pinned-filters.show{display:flex;}
+  .pf-box{display:flex;flex-direction:column;gap:4px;min-width:229px;}
+  .pf-label{
+    display:flex;align-items:center;gap:4px;
+    font:400 13px var(--font-body);color:var(--text-heading);
+  }
+  .pf-unpin{
+    display:flex;align-items:center;justify-content:center;background:none;border:none;
+    padding:0;cursor:pointer;width:12px;height:12px;color:#d1d5de;flex:0 0 auto;
+  }
+  .pf-unpin svg{width:12px;height:12px;}
+  .pf-select{
+    display:flex;align-items:center;gap:6px;min-height:32px;box-sizing:border-box;
+    background:var(--bg-elevation-1);border:1px solid var(--border-secondary);border-radius:8px;
+    padding:5.5px 8px;cursor:pointer;position:relative;white-space:nowrap;
+  }
+  .pf-select:hover{border-color:var(--border-brand-default);}
+  .pf-select.has-value{background:var(--bg-elevation-2);}
+  .pf-select-content{
+    display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0;overflow:hidden;
+  }
+  .pf-select-text{
+    flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font:400 14px var(--font-body);color:var(--text-placeholder);
+  }
+  .pf-select .caret{width:16px;height:16px;color:var(--icon-primary);flex:0 0 auto;margin-left:auto;}
+
+  /* ---------- Table (node 4088:15186) ---------- */
+  .table-wrap{margin:24px 8px 0;border:1px solid var(--border-secondary);border-radius:8px;overflow:hidden;}
+  .table-scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;}
+  thead th{
+    text-align:left;white-space:nowrap;
+    background:var(--bg-elevation-1);
+    border-bottom:1px solid var(--border-primary);
+    height:40px;padding:10px 12px;
+    font:500 12px var(--font-body);color:var(--text-heading);
+  }
+  tbody td{
+    height:48px;padding:0 12px;white-space:nowrap;
+    border-bottom:1px solid var(--border-primary);
+    font:400 14px var(--font-body);color:var(--text-body);
+    line-height:20px;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:var(--bg-elevation-1);}
+  th.col-status,td.col-status{width:117px;}
+  th.col-order,td.col-order{width:124px;}
+  th.col-submit,td.col-submit{width:160px;}
+  th.col-site,td.col-site{width:200px;}
+  th.col-assign,td.col-assign{width:160px;}
+  th.col-impact,td.col-impact{width:137px;}
+  th.col-cat1,td.col-cat1{width:123px;}
+  th.col-cat2,td.col-cat2{width:122px;}
+  th.col-submitter,td.col-submitter{width:119px;}
+  th.col-performer,td.col-performer{width:160px;}
+  th.col-created,td.col-created{width:160px;}
+  th.col-start,td.col-start{width:160px;}
+
+  .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:22px;padding:3px 8px;border-radius:4px;gap:4px;
+    font:500 12px var(--font-body);color:var(--text-heading);border:1px solid transparent;
+  }
+  .badge-green{background:var(--green-950);border-color:var(--green-600);}
+  .badge-red{background:var(--badge-error-bg);border-color:var(--badge-error-border);}
+  .badge-yellow{background:var(--yellow-950);border-color:var(--yellow-500);}
+  .badge-blue{background:var(--blue-950);border-color:var(--blue-500);}
+
+  /* ---------- Pagination (node 4088:15187) ---------- */
+  .pagination{
+    display:flex;align-items:center;justify-content:flex-end;gap:8px;
+    padding:24px 8px 32px;
+  }
+  .pg-arrow{
+    display:flex;align-items:center;justify-content:center;
+    width:36px;height:36px;padding:8px 4px;border-radius:8px;
+    background:none;border:none;cursor:pointer;color:var(--icon-primary);
+  }
+  .pg-arrow:hover{background:var(--bg-elevation-1);}
+  .pg-arrow svg{width:20px;height:20px;}
+  .pg-btn{
+    min-height:36px;min-width:34px;padding:8px 16px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    background:none;border:none;cursor:pointer;
+    font:500 14px var(--font-geist);color:var(--text-body);
+  }
+  .pg-btn:hover{background:var(--bg-elevation-1);}
+  .pg-btn.active{
+    background:var(--bg-elevation-1);
+    border:1px solid var(--border-brand-default);
+    color:var(--text-heading);
+    padding:6px 13px;
+    box-shadow:0 1px 2px rgba(0,0,0,0);
+  }
+  #pageNumbers{display:contents;}
+
+  /* ---------- Power Filters ---------- */
+  .btn-apply.active{background:#371e70;color:var(--text-on-color);border-color:#371e70;}
+  .clear-filters{
+    display:none;align-items:center;gap:2px;background:none;border:none;cursor:pointer;
+    height:32px;padding:2px;border-radius:8px;
+    font:500 12px var(--font-body);color:var(--text-brand-secondary);white-space:nowrap;
+  }
+  .clear-filters.show{display:flex;}
+  .clear-filters:hover{background:var(--bg-elevation-1);}
+  .clear-filters svg{width:16px;height:16px;flex:0 0 auto;}
+
+  .filter-bar{
+    display:none;flex-wrap:wrap;align-items:flex-start;
+    padding-top:12px;position:relative;z-index:5;
+  }
+  .filter-bar.show{display:flex;}
+  .filter-chips{display:flex;flex-wrap:wrap;gap:16px;}
+  .filter-chips:not(:empty){margin-right:16px;}
+  .pinned-filters .filter-chips:not(:empty){margin-right:0;}
+  .filter-chip{
+    display:flex;align-items:center;gap:8px;position:relative;
+    border:1px solid var(--border-brand-default);
+    border-radius:8px;padding:8px 12px;height:32px;box-sizing:border-box;
+    cursor:pointer;white-space:nowrap;
+  }
+  .fc-label{display:flex;align-items:center;gap:8px;}
+  .fc-field{
+    display:flex;align-items:center;justify-content:center;
+    border-radius:4px;padding:2px;
+    font:500 12px var(--font-body);color:var(--text-heading);white-space:nowrap;
+  }
+  .fc-tag{
+    display:flex;align-items:center;gap:4px;
+    background:var(--bg-brand-secondary);border-radius:4px;padding:2px 4px;
+    font:400 14px/20px var(--font-body);color:var(--text-heading);white-space:nowrap;
+  }
+  .fc-tag button{
+    background:none;border:none;color:var(--text-heading);cursor:pointer;padding:0;
+    display:flex;align-items:center;
+  }
+  .fc-tag button svg{width:12px;height:12px;}
+  .fc-tag button:hover{color:var(--text-brand-secondary);}
+  .add-filter-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    height:32px;padding:8px 12px;border-radius:8px;
+    background:none;border:1px solid var(--border-brand-default);color:var(--text-brand-secondary);
+    cursor:pointer;position:relative;white-space:nowrap;flex:0 0 auto;
+    font:500 12px var(--font-body);
+  }
+  .add-filter-btn:hover{background:var(--bg-elevation-1);}
+  .add-filter-btn svg{width:16px;height:16px;flex:0 0 auto;}
+  .add-filter-btn.compact{width:32px;padding:8px;}
+  .add-filter-btn.compact .afb-label{display:none;}
+
+  .field-popover, .value-popover{
+    position:absolute;top:calc(100% + 6px);left:0;
+    background:var(--bg-elevation-2);
+    border-radius:8px;
+    box-shadow:0 0 0 1px rgba(250,250,250,.1),0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+    width:264px;padding:12px 0;z-index:50;overflow:hidden;
+  }
+  .field-popover{padding:12px 0;}
+  .fp-search-wrap{padding:0 12px 4px;}
+  .fp-search, .vp-search{
+    width:100%;box-sizing:border-box;background:var(--bg-elevation-1);border:1px solid var(--border-secondary);
+    border-radius:8px;padding:7.5px 12px;color:var(--text-heading);font:400 14px var(--font-body);
+    outline:none;
+  }
+  .vp-search{margin:0 12px 4px;width:calc(100% - 24px);}
+  .fp-search::placeholder,.vp-search::placeholder{color:var(--text-placeholder);}
+  .fp-list{max-height:220px;overflow-y:auto;}
+  .fp-item{
+    display:flex;align-items:center;justify-content:flex-start;gap:4px;
+    padding:8px 16px;font:400 13px var(--font-body);color:#fff;
+    cursor:pointer;white-space:nowrap;overflow:hidden;text-align:left;
+    border-bottom:1px solid var(--border-primary);
+  }
+  .fp-item:last-child{border-bottom:none;}
+  .fp-item .fp-label{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;text-align:left;}
+  .fp-item .fp-pin{
+    flex:0 0 auto;width:16px;height:16px;color:var(--icon-primary);
+    opacity:0;background:none;border:none;padding:0;cursor:pointer;
+  }
+  .fp-item:hover{background:var(--bg-base-hover,#262626);}
+  .fp-item:hover .fp-pin, .fp-item.pinned .fp-pin, .fp-item:focus-within .fp-pin{opacity:1;}
+  .fp-item.pinned .fp-pin{color:var(--text-brand-secondary);}
+  .fp-item .fp-pin.disabled{cursor:not-allowed;opacity:.35!important;}
+  .fp-item:hover .fp-pin.disabled{opacity:.35!important;}
+  .fp-pin-divider{height:1px;background:var(--border-secondary);margin:0;}
+  .vp-list{max-height:200px;overflow-y:auto;}
+  .field-popover ::-webkit-scrollbar, .value-popover ::-webkit-scrollbar{width:6px;}
+  .field-popover ::-webkit-scrollbar-thumb, .value-popover ::-webkit-scrollbar-thumb{background:#525252;border-radius:8px;}
+  .vp-item{
+    display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;
+    font:400 13px var(--font-body);color:var(--text-heading);cursor:pointer;
+  }
+  .vp-item:hover{background:var(--bg-elevation-2);}
+  .vp-item input{accent-color:var(--bg-brand);width:14px;height:14px;flex:0 0 auto;}
+  .vp-item label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+  .vp-divider{height:1px;background:var(--border-secondary);margin:4px 0;}
+  .vp-op{display:flex;flex-direction:column;padding-top:4px;}
+  .vp-op-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:7px 8px;border-radius:6px;font:400 13px var(--font-body);color:var(--text-heading);cursor:pointer;
+  }
+  .vp-op-item:hover{background:var(--bg-elevation-2);}
+  .vp-op-item.selected{color:var(--text-brand-secondary);}
+  .vp-op-item svg{width:14px;height:14px;color:var(--text-brand-secondary);visibility:hidden;}
+  .vp-op-item.selected svg{visibility:visible;}
+
+  @media (max-width:900px){
+    .sidebar{display:none;}
+    .main{margin-left:0;}
+    .global-search{display:none;}
+    .content{padding:0 12px;}
+    .toolbar-row{padding:24px 0 0;flex-direction:column;align-items:stretch;}
+    .search-field{width:100%;}
+  }
+</style>
+
+<div class="shell">
+  <div class="topheader">
+    <div class="th-left">
+      <div class="logo">
+        <svg viewBox="0 0 94 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 2 4 19h8l-2 14 15-19h-8l2-12Z" fill="url(#lg)"/>
+          <text x="26" y="15" font-family="Poppins, Inter, sans-serif" font-weight="700" font-size="13" fill="#ffffff" letter-spacing="0.5">SPARK</text>
+          <text x="26" y="27" font-family="Inter, sans-serif" font-weight="500" font-size="5" fill="#9c8fd6" letter-spacing="0.3">THE INTELLIGENT ENERGY PLATFORM</text>
+          <defs><linearGradient id="lg" x1="4" y1="2" x2="27" y2="33"><stop stop-color="#8f7ae8"/><stop offset="1" stop-color="#6240bb"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="icon-btn28" title="Apps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="th-divider"></div>
+      <div class="global-search">
+        <div class="left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input placeholder="Search anything that you want..." />
+        </div>
+        <div class="kbd-combo">
+          <span class="kbd">alt</span><span class="kbd-plus">+</span><span class="kbd">space</span>
+        </div>
+      </div>
+    </div>
+    <div class="th-right">
+      <div class="icon-btn28" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      </div>
+      <div class="th-divider"></div>
+      <div class="icon-btn28" title="Assistant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 5 1.5V4.5A3 3 0 0 0 9 3Z"/><path d="M15 3a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1.5V4.5A3 3 0 0 1 15 3Z"/></svg>
+      </div>
+      <div class="th-divider"></div>
+      <div class="user-chip">
+        <span>Muhammad Rayyan</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sb-item" title="Expand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16" transform="translate(2,0)"/></svg>
+    </div>
+    <div class="sb-items">
+      <div class="sb-item active" title="Workforce Management">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+      </div>
+      <div class="sb-item" title="Alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M3.3 16.5c-.6.6-.2 1.5.6 1.5h16.2c.8 0 1.2-.9.6-1.5C19.9 15.7 18 13.7 18 9a6 6 0 0 0-12 0c0 4.7-1.9 6.7-2.7 7.5Z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header2">
+      <div class="header2-inner">
+        <div class="breadcrumb">
+          <span class="crumb">Home</span>
+          <span class="sep">/</span>
+          <span class="crumb">Workforce Management</span>
+          <span class="sep">/</span>
+          <span class="crumb current">WorkOrder</span>
+        </div>
+        <div class="site-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input placeholder="Select a single site or cluster" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:0 0 auto"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tabs">
+        <div class="tab">Overview</div>
+        <div class="tab active">WorkOrder Activity</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <h1>Work Order Activity</h1>
+          <p>A live overview of all work orders across sites track progress, status, and assignments from creation to sign-off.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-bulk">Bulk Upload</button>
+          <button class="btn-primary">Create Work Order</button>
+        </div>
+      </div>
+
+      <div class="toolbar-row">
+        <div class="toolbar-left">
+          <h2>All Work Orders</h2>
+          <p id="showingText">Showing 65 out of 100</p>
+
+          <div class="filter-bar" id="filterBar">
+            <div class="filter-chips" id="filterChips"></div>
+            <button class="add-filter-btn" id="addFilterBtn" title="Add Filter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+              <span class="afb-label">Add Filter</span>
+            </button>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <button class="clear-filters" id="clearFiltersBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            Clear Filters
+          </button>
+          <button class="btn-apply" id="applyFiltersBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            Apply Filters
+          </button>
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input placeholder="Search projects" id="searchProjects" />
+          </div>
+          <div class="filter-group">
+            <button class="btn-days">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Last 30 Days
+            </button>
+            <div class="vsep"></div>
+            <button class="btn-gear">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pinned-filters" id="pinnedFilters"></div>
+
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-status">Status</th>
+                <th class="col-order">Order ID</th>
+                <th class="col-submit">Submit Date</th>
+                <th class="col-site">Site Name</th>
+                <th class="col-assign">Assign to</th>
+                <th class="col-impact">Service Impact</th>
+                <th class="col-cat1">Op Cat T1</th>
+                <th class="col-cat2">Op Cat T2</th>
+                <th class="col-submitter">Submitter</th>
+                <th class="col-performer">Performer</th>
+                <th class="col-created">Created Date</th>
+                <th class="col-start">Start Time</th>
+              </tr>
+            </thead>
+            <tbody id="wo-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pagination" id="pagination">
+        <button class="pg-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <span id="pageNumbers"></span>
+        <button class="pg-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const BADGE_CLASS = { Completed:"green", Approved:"green", Cancel:"red", Pending:"yellow", Yellow:"yellow", "Review L1":"blue" };
+
+  const rows = [
+    { Status:"Completed", "Order ID":"WO-7812", "Submit Date":"10/10/2024 14:30", "Site Name":"AR - Emerald Oasis", "Assign to":"julian.renner@acm...", "Service Impact":"No Impact", "Op Cat T1":"Operations", "Op Cat T2":"PM", Submitter:"Amina", Performer:"Amina", "Created Date":"10/10/2024 14:30", "Start Time":"10/10/2024 14:30" },
+    { Status:"Cancel", "Order ID":"WO-3495", "Submit Date":"10/09/2024 09:15", "Site Name":"LV - Silver Sands", "Assign to":"elias.vonrueden@a...", "Service Impact":"No Impact", "Op Cat T1":"MNO Activity", "Op Cat T2":"Audit", Submitter:"Zayd", Performer:"Zayd", "Created Date":"10/09/2024 09:15", "Start Time":"10/09/2024 09:15" },
+    { Status:"Pending", "Order ID":"WO-1520", "Submit Date":"10/08/2024 18:45", "Site Name":"PT - Crimson Peak", "Assign to":"krysta.mraz@acm...", "Service Impact":"No Impact", "Op Cat T1":"MNO Activity", "Op Cat T2":"PM", Submitter:"Fatimah", Performer:"Fatimah", "Created Date":"10/08/2024 18:45", "Start Time":"10/08/2024 18:45" },
+    { Status:"Review L1", "Order ID":"WO-8963", "Submit Date":"10/07/2024 11:00", "Site Name":"FL - Azure Bay", "Assign to":"antonetta.pouros...", "Service Impact":"No Impact", "Op Cat T1":"Operations", "Op Cat T2":"Survey", Submitter:"Ibrahim", Performer:"Ibrahim", "Created Date":"10/07/2024 11:00", "Start Time":"10/07/2024 11:00" },
+    { Status:"Yellow", "Order ID":"WO-2147", "Submit Date":"10/06/2024 20:20", "Site Name":"GA - Golden Valley", "Assign to":"rowena.schmeler...", "Service Impact":"Partial Outage", "Op Cat T1":"MNO Activity", "Op Cat T2":"PM", Submitter:"Layla", Performer:"Layla", "Created Date":"10/06/2024 20:20", "Start Time":"10/06/2024 20:20" },
+    { Status:"Yellow", "Order ID":"WO-5701", "Submit Date":"10/05/2024 08:50", "Site Name":"OL - Obsidian Lake", "Assign to":"leonard.berge@ac...", "Service Impact":"No Impact", "Op Cat T1":"Operations", "Op Cat T2":"CM", Submitter:"Omar", Performer:"Omar", "Created Date":"10/05/2024 08:50", "Start Time":"10/05/2024 08:50" },
+    { Status:"Approved", "Order ID":"WO-9254", "Submit Date":"10/04/2024 16:05", "Site Name":"MR - Mystic River", "Assign to":"delbert.kunze@ac...", "Service Impact":"No Impact", "Op Cat T1":"Operations", "Op Cat T2":"CM", Submitter:"Nadia", Performer:"Nadia", "Created Date":"10/04/2024 16:05", "Start Time":"10/04/2024 16:05" },
+    { Status:"Approved", "Order ID":"WO-4638", "Submit Date":"10/03/2024 12:25", "Site Name":"NV - Neon Vista", "Assign to":"fredrick.kshlerin@...", "Service Impact":"Partial Outage", "Op Cat T1":"Operations", "Op Cat T2":"PM", Submitter:"Sami", Performer:"Sami", "Created Date":"10/03/2024 12:25", "Start Time":"10/03/2024 12:25" },
+    { Status:"Cancel", "Order ID":"WO-6072", "Submit Date":"10/02/2024 22:10", "Site Name":"CP - Copper Plains", "Assign to":"jayson.mertz@ac...", "Service Impact":"Partial Outage", "Op Cat T1":"MNO Activity", "Op Cat T2":"CM", Submitter:"Yasmin", Performer:"Yasmin", "Created Date":"10/02/2024 22:10", "Start Time":"10/02/2024 22:10" },
+    { Status:"Cancel", "Order ID":"WO-0386", "Submit Date":"10/01/2024 07:40", "Site Name":"WM - Willow Creek", "Assign to":"joaquin.ankunding...", "Service Impact":"Partial Outage", "Op Cat T1":"MNO Activity", "Op Cat T2":"CM", Submitter:"Hassan", Performer:"Hassan", "Created Date":"10/01/2024 07:40", "Start Time":"10/01/2024 07:40" }
+  ];
+
+  const COLS = ["Status","Order ID","Submit Date","Site Name","Assign to","Service Impact","Op Cat T1","Op Cat T2","Submitter","Performer","Created Date","Start Time"];
+  const COL_CLASS = { Status:"col-status","Order ID":"col-order","Submit Date":"col-submit","Site Name":"col-site","Assign to":"col-assign","Service Impact":"col-impact","Op Cat T1":"col-cat1","Op Cat T2":"col-cat2",Submitter:"col-submitter",Performer:"col-performer","Created Date":"col-created","Start Time":"col-start" };
+  const EXTRA_OPTIONS = { "Service Impact":["No Impact","Partial Outage","Full Outage"] };
+
+  function uniqueValues(field){
+    const set = new Set(rows.map(r => r[field]));
+    (EXTRA_OPTIONS[field] || []).forEach(v => set.add(v));
+    return Array.from(set);
+  }
+
+  const tbody = document.getElementById("wo-body");
+  const showingText = document.getElementById("showingText");
+  const clearBtn = document.getElementById("clearFiltersBtn");
+  const toolbarRight = document.querySelector(".toolbar-right");
+  const applyBtn = document.getElementById("applyFiltersBtn");
+  const filterBar = document.getElementById("filterBar");
+  const filterChips = document.getElementById("filterChips");
+  const addFilterBtn = document.getElementById("addFilterBtn");
+  const searchProjects = document.getElementById("searchProjects");
+  const pageNumbers = document.getElementById("pageNumbers");
+  const X_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>`;
+
+  // state: array of { field, operator: "is"|"is not", values: Set }
+  let filters = [];
+  let openPopover = null; // { type:'field'|'value', chipEl }
+  let searchText = "";
+
+  function closePopovers(){
+    document.querySelectorAll(".field-popover,.value-popover").forEach(el => el.remove());
+    openPopover = null;
+  }
+
+  function matchesRow(row){
+    if (searchText){
+      const hay = COLS.map(c => String(row[c])).join(" ").toLowerCase();
+      if (!hay.includes(searchText.toLowerCase())) return false;
+    }
+    for (const f of filters){
+      if (f.values.size === 0) continue;
+      const val = row[f.field];
+      const inSet = f.values.has(val);
+      if (f.operator === "is" && !inSet) return false;
+      if (f.operator === "is not" && inSet) return false;
+    }
+    return true;
+  }
+
+  function hasActiveFilters(){
+    return filters.some(f => f.values.size > 0) || !!searchText;
+  }
+
+  function render(){
+    const visible = rows.filter(matchesRow);
+    tbody.innerHTML = visible.map(r => `
+      <tr>
+        ${COLS.map(c => c === "Status"
+          ? `<td class="${COL_CLASS[c]}"><span class="badge badge-${BADGE_CLASS[r[c]] || "blue"}">${r[c]}</span></td>`
+          : `<td class="${COL_CLASS[c]}">${r[c]}</td>`
+        ).join("")}
+      </tr>
+    `).join("") || `<tr><td colspan="${COLS.length}" style="padding:32px 16px;color:var(--text-body);text-align:center;">No work orders match these filters.</td></tr>`;
+
+    const hasFilters = hasActiveFilters();
+    showingText.textContent = hasFilters
+      ? `Showing ${visible.length} out of 100`
+      : `Showing 65 out of 100`;
+    clearBtn.classList.toggle("show", hasFilters);
+    placeCombinedControls();
+
+    const pageCount = visible.length <= 10 ? 1 : 4;
+    pageNumbers.innerHTML = Array.from({length: pageCount}, (_, i) =>
+      `<button class="pg-btn${i === 0 ? " active" : ""}">${i + 1}</button>`
+    ).join("");
+  }
+
+  const MAX_VISIBLE_TAGS = 2; // ad-hoc filter chips
+  const MAX_VISIBLE_PINNED_TAGS = 1; // pinned quick-filter boxes are narrower
+
+  function tagsHTML(f, maxVisible){
+    const values = Array.from(f.values);
+    const visible = values.slice(0, maxVisible);
+    const overflow = values.slice(maxVisible);
+    const tag = (label, isOverflow) => `
+      <span class="fc-tag" data-val="${isOverflow ? "__overflow__" : label.replace(/"/g,'&quot;')}">
+        ${label}
+        <button class="fc-remove" title="Remove">${X_ICON}</button>
+      </span>`;
+    return `
+      <span class="fc-field">${f.field} {${f.operator}}</span>
+      ${visible.map(v => tag(v, false)).join("")}
+      ${overflow.length ? tag(`+${overflow.length}`, true) : ""}
+    `;
+  }
+
+  function chipLabelHTML(f){ return tagsHTML(f, MAX_VISIBLE_TAGS); }
+
+  function removeTagValue(f, val, maxVisible){
+    const values = Array.from(f.values);
+    if (val === "__overflow__") values.slice(maxVisible).forEach(v => f.values.delete(v));
+    else f.values.delete(val);
+  }
+
+  function refreshChipLabel(idx){
+    const chip = filterChips.querySelector(`.filter-chip[data-idx="${idx}"]`);
+    if (!chip) return;
+    const label = chip.querySelector(".fc-label");
+    if (label) label.innerHTML = chipLabelHTML(filters[idx]);
+  }
+
+  function renderChips(){
+    filterChips.innerHTML = "";
+    const chipCount = filters.filter(f => !pinnedFields.has(f.field)).length;
+    addFilterBtn.classList.toggle("compact", chipCount > 0);
+    addFilterBtn.title = chipCount > 0 ? "Add another filter" : "Add Filter";
+    filters.forEach((f, idx) => {
+      if (pinnedFields.has(f.field)) return; // pinned fields render via the pinned-filters row instead
+      const chip = document.createElement("div");
+      chip.className = "filter-chip";
+      chip.dataset.idx = idx;
+      const label = document.createElement("span");
+      label.className = "fc-label";
+      label.innerHTML = chipLabelHTML(f);
+      chip.appendChild(label);
+      chip.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const tagBtn = e.target.closest(".fc-remove");
+        if (tagBtn){
+          const val = tagBtn.parentElement.dataset.val;
+          removeTagValue(f, val, MAX_VISIBLE_TAGS);
+          if (f.values.size === 0){
+            filters.splice(idx, 1);
+            renderChips();
+          } else {
+            refreshChipLabel(idx);
+          }
+          render();
+          return;
+        }
+        if (openPopover && chip.contains(openPopover)) { closePopovers(); return; }
+        openValuePopover(chip, f, () => refreshChipLabel(idx));
+      });
+      filterChips.appendChild(chip);
+    });
+    placeCombinedControls();
+  }
+
+  function openValuePopover(anchorEl, filterState, onUpdate){
+    closePopovers();
+    const options = uniqueValues(filterState.field);
+    const pop = document.createElement("div");
+    pop.className = "value-popover";
+    pop.addEventListener("click", e => e.stopPropagation());
+    pop.innerHTML = `
+      <input class="vp-search" placeholder="Search..." />
+      <div class="vp-list">
+        <label class="vp-item"><input type="checkbox" data-all /> Select All</label>
+        ${options.map(o => `<label class="vp-item"><input type="checkbox" value="${o.replace(/"/g,'&quot;')}" ${filterState.values.has(o) ? "checked" : ""}/> <span>${o}</span></label>`).join("")}
+      </div>
+      <div class="vp-divider"></div>
+      <div class="vp-op">
+        <div class="vp-op-item" data-op="is"><span>is</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div class="vp-op-item" data-op="is not"><span>is not</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      </div>
+    `;
+    anchorEl.appendChild(pop);
+    openPopover = pop;
+
+    function syncOpUI(){
+      pop.querySelectorAll(".vp-op-item").forEach(el => el.classList.toggle("selected", el.dataset.op === filterState.operator));
+    }
+    syncOpUI();
+
+    pop.querySelectorAll('input[type=checkbox]:not([data-all])').forEach(cb => {
+      cb.addEventListener("change", () => {
+        if (cb.checked) filterState.values.add(cb.value);
+        else filterState.values.delete(cb.value);
+        onUpdate(); render();
+      });
+    });
+    pop.querySelector("[data-all]").addEventListener("change", (e) => {
+      if (e.target.checked) options.forEach(o => filterState.values.add(o));
+      else filterState.values.clear();
+      openValuePopover(anchorEl, filterState, onUpdate);
+      onUpdate(); render();
+    });
+    pop.querySelectorAll(".vp-op-item").forEach(el => {
+      el.addEventListener("click", () => {
+        filterState.operator = el.dataset.op;
+        syncOpUI();
+        onUpdate(); render();
+      });
+    });
+    pop.querySelector(".vp-search").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      pop.querySelectorAll(".vp-list .vp-item:not(:first-child)").forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(q) ? "flex" : "none";
+      });
+    });
+  }
+
+  const pinnedFields = new Set(); // fields pinned as quick-filter boxes
+  const MAX_PINNED_FIELDS = 3;
+
+  function orderedAvailableFields(){
+    const usedFields = new Set(filters.map(f => f.field));
+    // pinned fields get their own quick-filter box, so they're excluded from this dropdown
+    return COLS.filter(c => !pinnedFields.has(c) && !usedFields.has(c));
+  }
+
+  const PIN_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 3h6l1 6 3 3v2H5v-2l3-3Z"/></svg>`;
+  const PIN_FILLED_ICON = `<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.0311 4.875L8.52469 7.38984C8.73844 7.98375 8.82703 8.97844 7.90641 10.2023C7.84202 10.2884 7.75981 10.3596 7.6654 10.4109C7.57099 10.4623 7.46661 10.4927 7.35937 10.5C7.34156 10.5 7.32422 10.5 7.30641 10.5C7.20785 10.5 7.11026 10.4806 7.01921 10.4429C6.92817 10.4052 6.84545 10.3499 6.77578 10.2802L4.51359 8.01563L2.51531 10.0153C2.44495 10.0857 2.34951 10.1252 2.25 10.1252C2.15049 10.1252 2.05505 10.0857 1.98469 10.0153C1.91432 9.94495 1.87479 9.84951 1.87479 9.75C1.87479 9.65049 1.91432 9.55505 1.98469 9.48469L3.98438 7.48641L1.72031 5.22234C1.64589 5.14783 1.588 5.05848 1.5504 4.96011C1.5128 4.86174 1.49634 4.75656 1.50209 4.6514C1.50784 4.54625 1.53567 4.44349 1.58377 4.3498C1.63186 4.25612 1.69915 4.17361 1.78125 4.10766C2.97281 3.14625 4.11328 3.33516 4.6125 3.49172L7.125 0.970313C7.19465 0.90065 7.27733 0.845391 7.36834 0.807689C7.45934 0.769987 7.55689 0.750582 7.65539 0.750582C7.7539 0.750582 7.85144 0.769987 7.94244 0.807689C8.03345 0.845391 8.11614 0.90065 8.18578 0.970313L11.0306 3.81469C11.1712 3.95526 11.2503 4.14592 11.2504 4.34475C11.2504 4.54357 11.1716 4.7343 11.0311 4.875Z" fill="currentColor"/></svg>`;
+  const PIN_PLACEHOLDER = {
+    "Order ID": "Select the WO ID",
+    "Site Name": "Select the Site name",
+    "Service Impact": "Select the service impact",
+  };
+  const pinPlaceholder = (field) => PIN_PLACEHOLDER[field] || `Select ${field}`;
+  const pinnedFiltersEl = document.getElementById("pinnedFilters");
+
+  function getOrCreateFilter(field){
+    let f = filters.find(x => x.field === field);
+    if (!f){ f = { field, operator:"is", values:new Set() }; filters.push(f); }
+    return f;
+  }
+
+  // A pinned box's inner content: plain placeholder text when empty, or the same
+  // field-pill + value-tag markup as ad-hoc chips (narrower limit) once it has values.
+  // Lives inside a dedicated .pf-select-content wrapper (separate from the caret and any
+  // open value-popover) so refreshing it on every checkbox change never destroys the popover.
+  function pinnedContentInnerHTML(field){
+    const f = filters.find(x => x.field === field);
+    return (f && f.values.size > 0)
+      ? tagsHTML(f, MAX_VISIBLE_PINNED_TAGS)
+      : `<span class="pf-select-text">${pinPlaceholder(field)}</span>`;
+  }
+
+  function pinnedSelectInnerHTML(field){
+    return `<span class="pf-select-content">${pinnedContentInnerHTML(field)}</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+  }
+
+  function refreshPinnedBox(field){
+    const box = pinnedFiltersEl.querySelector(`.pf-select[data-field="${field.replace(/"/g,'&quot;')}"]`);
+    if (!box) return;
+    const f = filters.find(x => x.field === field);
+    box.classList.toggle("has-value", !!(f && f.values.size > 0));
+    const content = box.querySelector(".pf-select-content");
+    if (content) content.innerHTML = pinnedContentInnerHTML(field);
+  }
+
+  // Decides whether filterChips / addFilterBtn live inside the pinned-filters row (merged
+  // into one line with the pinned boxes) or back in their default spot inside filterBar.
+  // Per the Figma spec, chips sit AFTER the pinned boxes, and Add Filter is always last.
+  // filterChips only merges in when it actually has chips in it — an empty flex item still
+  // eats a `gap` and shows up as unwanted blank space before the first pinned box.
+  function placeCombinedControls(){
+    const hasPins = pinnedFields.size > 0;
+    const combine = hasPins && filterBar.classList.contains("show");
+    const chipsHaveContent = filterChips.children.length > 0;
+    if (combine && chipsHaveContent){
+      pinnedFiltersEl.appendChild(filterChips); // after the pinned boxes
+    } else if (filterChips.parentElement !== filterBar){
+      filterBar.insertBefore(filterChips, filterBar.firstChild);
+    }
+    // Clear Filters moves beside the pinned boxes whenever any pinned field is set up
+    // (independent of the Apply Filters toggle, since pinned boxes stay visible either way);
+    // otherwise it stays in its usual spot next to Apply Filters.
+    if (hasPins){
+      pinnedFiltersEl.appendChild(clearBtn);
+    } else if (clearBtn.parentElement !== toolbarRight){
+      toolbarRight.insertBefore(clearBtn, toolbarRight.firstChild);
+    }
+    if (combine){
+      pinnedFiltersEl.appendChild(addFilterBtn); // always last
+    } else if (addFilterBtn.parentElement !== filterBar){
+      filterBar.appendChild(addFilterBtn);
+    }
+  }
+
+  function renderPinnedFilters(){
+    // pinned quick-filters are always visible once pinned, independent of the Apply Filters toggle
+    const hasPins = pinnedFields.size > 0;
+    pinnedFiltersEl.classList.toggle("show", hasPins);
+    // detach movable nodes back into filterBar first so wiping innerHTML below doesn't destroy them
+    if (filterChips.parentElement === pinnedFiltersEl) filterBar.insertBefore(filterChips, filterBar.firstChild);
+    if (clearBtn.parentElement === pinnedFiltersEl) toolbarRight.insertBefore(clearBtn, toolbarRight.firstChild);
+    if (addFilterBtn.parentElement === pinnedFiltersEl) filterBar.appendChild(addFilterBtn);
+    pinnedFiltersEl.innerHTML = "";
+    pinnedFields.forEach(field => {
+      const f = filters.find(x => x.field === field);
+      const hasValue = !!(f && f.values.size > 0);
+      const box = document.createElement("div");
+      box.className = "pf-box";
+      box.innerHTML = `
+        <div class="pf-label">
+          <span>${field}</span>
+          <button class="pf-unpin" title="Unpin">${PIN_FILLED_ICON}</button>
+        </div>
+        <div class="pf-select${hasValue ? " has-value" : ""}" data-field="${field.replace(/"/g,'&quot;')}">
+          ${pinnedSelectInnerHTML(field)}
+        </div>
+      `;
+      box.querySelector(".pf-unpin").addEventListener("click", (e) => {
+        e.stopPropagation();
+        closePopovers();
+        pinnedFields.delete(field);
+        filters = filters.filter(f => !(f.field === field && f.values.size === 0));
+        renderPinnedFilters();
+        renderChips();
+      });
+      const selectEl = box.querySelector(".pf-select");
+      selectEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const tagBtn = e.target.closest(".fc-remove");
+        if (tagBtn){
+          const val = tagBtn.parentElement.dataset.val;
+          const filterState = filters.find(x => x.field === field);
+          if (filterState) removeTagValue(filterState, val, MAX_VISIBLE_PINNED_TAGS);
+          refreshPinnedBox(field);
+          render();
+          return;
+        }
+        if (openPopover && selectEl.contains(openPopover)) { closePopovers(); return; }
+        const filterState = getOrCreateFilter(field);
+        openValuePopover(selectEl, filterState, () => refreshPinnedBox(field));
+      });
+      pinnedFiltersEl.appendChild(box);
+    });
+    placeCombinedControls();
+  }
+
+  function renderFieldList(pop, query){
+    const list = pop.querySelector(".fp-list");
+    const fields = orderedAvailableFields().filter(f => !query || f.toLowerCase().includes(query));
+    const atPinLimit = pinnedFields.size >= MAX_PINNED_FIELDS;
+    list.innerHTML = fields.map(f => `
+      <div class="fp-item" data-field="${f}">
+        <span class="fp-label">${f}</span>
+        <button class="fp-pin${atPinLimit ? " disabled" : ""}" data-field="${f}" title="${atPinLimit ? "Max 3 pinned filters" : "Pin"}">${PIN_ICON}</button>
+      </div>
+    `).join("");
+
+    list.querySelectorAll(".fp-item").forEach(el => {
+      el.addEventListener("click", (e) => {
+        if (e.target.closest(".fp-pin")) return;
+        const field = el.dataset.field;
+        filters.push({ field, operator:"is", values:new Set() });
+        renderChips();
+        closePopovers();
+        const newIdx = filters.length - 1;
+        const chip = filterChips.querySelector(`.filter-chip[data-idx="${newIdx}"]`);
+        openValuePopover(chip, filters[newIdx], () => refreshChipLabel(newIdx));
+      });
+    });
+    list.querySelectorAll(".fp-pin").forEach(el => {
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (pinnedFields.size >= MAX_PINNED_FIELDS) return;
+        const field = el.dataset.field;
+        pinnedFields.add(field);
+        renderPinnedFilters();
+        renderFieldList(pop, pop.querySelector(".fp-search").value.toLowerCase());
+      });
+    });
+  }
+
+  function openFieldPopover(){
+    closePopovers();
+    const pop = document.createElement("div");
+    pop.className = "field-popover";
+    pop.addEventListener("click", e => e.stopPropagation());
+    pop.innerHTML = `
+      <div class="fp-search-wrap">
+        <input class="fp-search" placeholder="Search..." />
+      </div>
+      <div class="fp-list"></div>
+    `;
+    addFilterBtn.appendChild(pop);
+    openPopover = pop;
+
+    renderFieldList(pop, "");
+    pop.querySelector(".fp-search").addEventListener("input", (e) => {
+      renderFieldList(pop, e.target.value.toLowerCase());
+    });
+  }
+
+  applyBtn.addEventListener("click", () => {
+    applyBtn.classList.toggle("active");
+    filterBar.classList.toggle("show");
+    if (!filterBar.classList.contains("show")){
+      // closing the panel only clears ad-hoc (non-pinned) filters; pinned quick-filters persist
+      filters = filters.filter(f => pinnedFields.has(f.field));
+      renderChips(); render();
+    }
+    renderPinnedFilters();
+  });
+
+  addFilterBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (openPopover && addFilterBtn.contains(openPopover)) { closePopovers(); return; }
+    openFieldPopover();
+  });
+
+  clearBtn.addEventListener("click", () => {
+    filters = [];
+    searchText = "";
+    searchProjects.value = "";
+    renderChips(); render(); renderPinnedFilters();
+  });
+
+  searchProjects.addEventListener("input", (e) => {
+    searchText = e.target.value;
+    render();
+  });
+
+  document.addEventListener("click", () => closePopovers());
+
+  renderChips();
+  renderPinnedFilters();
+  render();
+})();
+</script>
