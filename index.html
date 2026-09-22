@@ -220,7 +220,7 @@
 
   .pinned-filters{display:none;flex-wrap:wrap;align-items:flex-end;gap:20px;padding:12px 8px 0;}
   .pinned-filters.show{display:flex;}
-  .pf-box{display:flex;flex-direction:column;gap:4px;min-width:229px;}
+  .pf-box{display:flex;flex-direction:column;gap:4px;min-width:229px;flex-shrink:0;}
   .pf-label{
     display:flex;align-items:center;gap:4px;
     font:400 13px var(--font-body);color:var(--text-heading);
@@ -320,7 +320,7 @@
   .btn-apply.active{background:#371e70;color:var(--text-on-color);border-color:#371e70;}
   .clear-filters{
     display:none;align-items:center;gap:2px;background:none;border:none;cursor:pointer;
-    height:32px;padding:2px;border-radius:8px;
+    height:32px;padding:2px;border-radius:8px;flex-shrink:0;
     font:500 12px var(--font-body);color:var(--text-brand-secondary);white-space:nowrap;
   }
   .clear-filters.show{display:flex;}
@@ -337,7 +337,7 @@
      instead of the chip group wrapping internally and stranding the button on its own row. */
   .filter-chips{display:contents;}
   .filter-chip{
-    display:flex;align-items:center;gap:8px;position:relative;
+    display:flex;align-items:center;gap:8px;position:relative;flex-shrink:0;
     border:1px solid var(--border-brand-default);
     border-radius:8px;padding:8px 12px;height:32px;box-sizing:border-box;
     cursor:pointer;white-space:nowrap;
@@ -431,9 +431,25 @@
     .sidebar{display:none;}
     .main{margin-left:0;}
     .global-search{display:none;}
-    .content{padding:0 12px;}
-    .toolbar-row{padding:24px 0 0;flex-direction:column;align-items:stretch;}
+    .content{padding:0 12px;overflow-x:hidden;}
+    .toolbar-row{padding:24px 0 0;flex-direction:column;align-items:stretch;overflow-x:hidden;}
+    .toolbar-left{min-width:0;width:100%;overflow-x:hidden;}
     .search-field{width:100%;}
+
+    /* On narrow screens, filters no longer wrap into a tall stack of rows — the row scrolls
+       horizontally instead, so it stays a single compact line regardless of filter count.
+       width:100% + overflow-x:hidden on the ancestors above stop them from growing to fit
+       this row's content — without that, the whole page widens instead of the row itself
+       scrolling internally. */
+    .filter-bar.show, .pinned-filters.show{
+      flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-width:100%;
+      margin:0 -8px;padding-left:8px;padding-right:8px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .filter-bar::-webkit-scrollbar, .pinned-filters::-webkit-scrollbar{height:6px;}
+    .filter-bar::-webkit-scrollbar-thumb, .pinned-filters::-webkit-scrollbar-thumb{
+      background:#525252;border-radius:8px;
+    }
   }
 </style>
 
