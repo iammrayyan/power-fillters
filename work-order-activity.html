@@ -328,13 +328,14 @@
   .clear-filters svg{width:16px;height:16px;flex:0 0 auto;}
 
   .filter-bar{
-    display:none;flex-wrap:wrap;align-items:flex-start;
+    display:none;flex-wrap:wrap;align-items:flex-start;gap:16px;
     padding-top:12px;position:relative;z-index:5;
   }
   .filter-bar.show{display:flex;}
-  .filter-chips{display:flex;flex-wrap:wrap;gap:16px;}
-  .filter-chips:not(:empty){margin-right:16px;}
-  .pinned-filters .filter-chips:not(:empty){margin-right:0;}
+  /* display:contents lifts each .filter-chip into the parent's own flex-wrap flow (filter-bar
+     or pinned-filters), so chips and the Add Filter / pinned boxes wrap together as one line
+     instead of the chip group wrapping internally and stranding the button on its own row. */
+  .filter-chips{display:contents;}
   .filter-chip{
     display:flex;align-items:center;gap:8px;position:relative;
     border:1px solid var(--border-brand-default);
