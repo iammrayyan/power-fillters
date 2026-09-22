@@ -390,7 +390,11 @@
   .add-filter-btn.compact .afb-label{display:none;}
 
   .field-popover, .value-popover{
-    position:absolute;top:calc(100% + 6px);left:0;
+    /* position:fixed + appended to <body> (see positionPopover()) rather than nested inside
+       the anchor — filter-bar/pinned-filters are horizontally-scrolling overflow containers,
+       so a popover positioned/clipped relative to them would get cut off by overflow-y:hidden
+       instead of showing below the button. */
+    position:fixed;
     background:var(--bg-elevation-2);
     border-radius:8px;
     box-shadow:0 0 0 1px rgba(250,250,250,.1),0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
@@ -677,6 +681,18 @@
     openPopover = null;
   }
 
+  // Appends the popover to <body> and pins it under anchorEl via fixed coordinates, so it's
+  // never clipped by a scrolling ancestor (filter-bar / pinned-filters have overflow-y:hidden
+  // for their horizontal scroll). Closes on scroll/resize since a fixed popover can't track
+  // the anchor moving.
+  function positionPopover(pop, anchorEl){
+    const r = anchorEl.getBoundingClientRect();
+    pop.style.top = (r.bottom + 6) + "px";
+    pop.style.left = r.left + "px";
+    pop._anchorEl = anchorEl; // popover no longer nests inside its anchor, so track it explicitly
+    document.body.appendChild(pop);
+  }
+
   function matchesRow(row){
     if (searchText){
       const hay = COLS.map(c => String(row[c])).join(" ").toLowerCase();
@@ -783,7 +799,7 @@
           render();
           return;
         }
-        if (openPopover && chip.contains(openPopover)) { closePopovers(); return; }
+        if (openPopover && openPopover._anchorEl === chip) { closePopovers(); return; }
         openValuePopover(chip, f, () => refreshChipLabel(idx));
       });
       filterChips.appendChild(chip);
@@ -809,7 +825,7 @@
         <div class="vp-op-item" data-op="is not"><span>is not</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
       </div>
     `;
-    anchorEl.appendChild(pop);
+    positionPopover(pop, anchorEl);
     openPopover = pop;
 
     function syncOpUI(){
@@ -966,7 +982,7 @@
           render();
           return;
         }
-        if (openPopover && selectEl.contains(openPopover)) { closePopovers(); return; }
+        if (openPopover && openPopover._anchorEl === selectEl) { closePopovers(); return; }
         const filterState = getOrCreateFilter(field);
         openValuePopover(selectEl, filterState, () => refreshPinnedBox(field));
       });
@@ -1021,7 +1037,7 @@
       </div>
       <div class="fp-list"></div>
     `;
-    addFilterBtn.appendChild(pop);
+    positionPopover(pop, addFilterBtn);
     openPopover = pop;
 
     renderFieldList(pop, "");
@@ -1043,7 +1059,7 @@
 
   addFilterBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (openPopover && addFilterBtn.contains(openPopover)) { closePopovers(); return; }
+    if (openPopover && openPopover._anchorEl === addFilterBtn) { closePopovers(); return; }
     openFieldPopover();
   });
 
@@ -1060,6 +1076,9 @@
   });
 
   document.addEventListener("click", () => closePopovers());
+  // fixed-position popovers don't track their anchor while scrolling, so close them instead
+  window.addEventListener("scroll", () => closePopovers(), true);
+  window.addEventListener("resize", () => closePopovers());
 
   renderChips();
   renderPinnedFilters();
