@@ -155,7 +155,7 @@
   }
 
   /* ---------- Content ---------- */
-  .content{padding:0 20px;display:flex;flex-direction:column;}
+  .content{padding:0 20px;display:flex;flex-direction:column;overflow-x:hidden;}
   .page-header{
     display:flex;align-items:center;justify-content:space-between;gap:20px;
     padding:32px 0 0;flex-wrap:wrap;
@@ -182,9 +182,13 @@
     display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;
     padding:32px 8px 0;
   }
+  /* min-width:0 lets this side shrink instead of growing to fit an unbounded filter row —
+     without it, enough active filters push toolbar-right (Apply Filters/search/etc) onto its
+     own row below instead of staying beside the title, at ANY screen width, not just mobile. */
+  .toolbar-left{min-width:0;flex:1 1 420px;}
   .toolbar-left h2{margin:0;font:600 18px var(--font-heading);color:var(--text-heading);}
   .toolbar-left p{margin:4px 0 0;font:500 12px var(--font-body);color:var(--text-body);}
-  .toolbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .toolbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;flex:0 0 auto;}
   .btn-apply{
     display:flex;align-items:center;gap:8px;
     border:1px solid var(--border-brand-default);background:none;cursor:pointer;
@@ -218,8 +222,11 @@
   .btn-gear:hover{background:var(--bg-elevation-1);}
   .btn-gear svg{width:20px;height:20px;}
 
-  .pinned-filters{display:none;flex-wrap:wrap;align-items:flex-end;gap:20px;padding:12px 8px 0;}
-  .pinned-filters.show{display:flex;}
+  .pinned-filters{display:none;align-items:flex-end;gap:20px;padding:12px 8px 0;min-width:0;}
+  .pinned-filters.show{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-width:100%;
+    -webkit-overflow-scrolling:touch;
+  }
   .pf-box{display:flex;flex-direction:column;gap:4px;min-width:229px;flex-shrink:0;}
   .pf-label{
     display:flex;align-items:center;gap:4px;
@@ -328,10 +335,21 @@
   .clear-filters svg{width:16px;height:16px;flex:0 0 auto;}
 
   .filter-bar{
-    display:none;flex-wrap:wrap;align-items:flex-start;gap:16px;
+    display:none;align-items:flex-start;gap:16px;
     padding-top:12px;position:relative;z-index:5;
   }
-  .filter-bar.show{display:flex;}
+  /* A large filter set scrolls horizontally as one compact line instead of wrapping into many
+     rows — wrapping was what pushed toolbar-right (Apply Filters/search/etc) onto its own row
+     below the title at any screen width. max-width:100% + min-width:0 on toolbar-left (above)
+     is what lets this row be capped and scroll internally instead of widening the page. */
+  .filter-bar.show{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-width:100%;
+    -webkit-overflow-scrolling:touch;
+  }
+  .filter-bar::-webkit-scrollbar, .pinned-filters::-webkit-scrollbar{height:6px;}
+  .filter-bar::-webkit-scrollbar-thumb, .pinned-filters::-webkit-scrollbar-thumb{
+    background:#525252;border-radius:8px;
+  }
   /* display:contents lifts each .filter-chip into the parent's own flex-wrap flow (filter-bar
      or pinned-filters), so chips and the Add Filter / pinned boxes wrap together as one line
      instead of the chip group wrapping internally and stranding the button on its own row. */
@@ -431,25 +449,12 @@
     .sidebar{display:none;}
     .main{margin-left:0;}
     .global-search{display:none;}
-    .content{padding:0 12px;overflow-x:hidden;}
-    .toolbar-row{padding:24px 0 0;flex-direction:column;align-items:stretch;overflow-x:hidden;}
-    .toolbar-left{min-width:0;width:100%;overflow-x:hidden;}
+    .content{padding:0 12px;}
+    .toolbar-row{padding:24px 0 0;flex-direction:column;align-items:stretch;}
+    .toolbar-left{width:100%;flex-basis:auto;}
     .search-field{width:100%;}
-
-    /* On narrow screens, filters no longer wrap into a tall stack of rows — the row scrolls
-       horizontally instead, so it stays a single compact line regardless of filter count.
-       width:100% + overflow-x:hidden on the ancestors above stop them from growing to fit
-       this row's content — without that, the whole page widens instead of the row itself
-       scrolling internally. */
-    .filter-bar.show, .pinned-filters.show{
-      flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-width:100%;
-      margin:0 -8px;padding-left:8px;padding-right:8px;
-      -webkit-overflow-scrolling:touch;
-    }
-    .filter-bar::-webkit-scrollbar, .pinned-filters::-webkit-scrollbar{height:6px;}
-    .filter-bar::-webkit-scrollbar-thumb, .pinned-filters::-webkit-scrollbar-thumb{
-      background:#525252;border-radius:8px;
-    }
+    /* full-bleed the scrollable filter row to the screen edges on mobile */
+    .filter-bar.show, .pinned-filters.show{margin:0 -12px;padding-left:12px;padding-right:12px;}
   }
 </style>
 
